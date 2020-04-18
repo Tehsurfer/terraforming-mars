@@ -95,7 +95,7 @@ export const PlayerHome = Vue.component("player-home", {
                 </div>
             </div>
 
-      <div id="clock">{{minutes}}:{{seconds}}</div>
+      
 
 
 
@@ -149,7 +149,7 @@ export const PlayerHome = Vue.component("player-home", {
                 <div class="player_home_block player_home_block--resources nofloat">
                     <player-resources :player="player" v-trim-whitespace></player-resources>
                 </div>
-
+                <div id="clock">{{minutes}}:{{seconds}}</div>
                 <div class="player_home_block player_home_block--actions nofloat">
                     <a name="actions" class="player_home_anchor"></a>
                     <h2 :class="'player_color_'+ player.color" v-i18n>Actions</h2>
