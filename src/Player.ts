@@ -956,6 +956,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
     }
 
     private playProjectCard(game: Game): PlayerInput {
+      
       const cb = (selectedCard: IProjectCard, howToPay: HowToPay) => {
         const cardCost: number = this.getCardCost(game, selectedCard);
         let totalToPay: number = 0;
@@ -1101,6 +1102,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
                 });
             }
         }
+        this.time -= (performance.now() - this.turnStart)/1000
         return undefined;
     }
 
@@ -1124,6 +1126,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
               new LogMessageData(LogMessageDataType.PLAYER, this.id),
               new LogMessageData(LogMessageDataType.CARD, foundCard.name)
             );
+            this.time -= (performance.now() - this.turnStart)/1000
             return undefined;
           }
       );
@@ -1164,6 +1167,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
               new LogMessageData(LogMessageDataType.PLAYER, this.id),
               new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Sell patents")
             );
+            this.time -= (performance.now() - this.turnStart)/1000
             return undefined;
           }, this.cardsInHand.length
       );
@@ -1190,10 +1194,12 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
         );
         buildColony.options.push(colonySelect);
       }); 
+      this.time -= (performance.now() - this.turnStart)/1000
       return buildColony;
     }      
 
     private airScraping(game: Game): PlayerInput {
+      
       return new SelectOption(
         "Air scraping (" + constants.AIR_SCRAPING_COST + " MC)", 
         () => {
@@ -1206,6 +1212,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Air Scrapping")
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
@@ -1224,12 +1231,14 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Power plant")
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
     }
 
     private asteroid(game: Game): PlayerInput {
+
       return new SelectOption(
         "Asteroid (" + constants.ASTEROID_COST + " MC)", 
         () => {
@@ -1242,6 +1251,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Asteroid")
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
@@ -1260,6 +1270,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Aquifer"),
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
@@ -1278,6 +1289,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "Greenery")
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
@@ -1297,12 +1309,14 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
             new LogMessageData(LogMessageDataType.STANDART_PROJECT, "City")
           );
+          this.time -= (performance.now() - this.turnStart)/1000
           return undefined;
         }
       );
     } 
 
     private tradeWithColony(openColonies: Array<IColony>, game: Game): PlayerInput {
+      
       let selectColony = new OrOptions();
       openColonies.forEach(colony => {
         const colonySelect =  new SelectOption(
@@ -1315,6 +1329,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
               new LogMessageData(LogMessageDataType.PLAYER, this.id),
               new LogMessageData(LogMessageDataType.COLONY, colony.name)
             );
+            this.time -= (performance.now() - this.turnStart)/1000
             return undefined;
           }
         );
@@ -1375,6 +1390,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
               "${0} converted plants into a greenery",
               new LogMessageData(LogMessageDataType.PLAYER, this.id),
             );
+            this.time -= (performance.now() - this.turnStart)/1000
             return undefined;
           }
       );
@@ -1411,6 +1427,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
         raiseTempOptions.title = "Select resource amounts to raise temp";
 
         return new SelectOption("Convert 8 heat into temperature", () => {
+          this.time -= (performance.now() - this.turnStart)/1000
           return raiseTempOptions;
         });
 
@@ -1464,12 +1481,14 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
             }
         );
       }
+      this.time -= (performance.now() - this.turnStart)/1000
       return new SelectOption(milestone.name, () => {
         return claimer(8, 0);
       });
     }
 
     private fundAward(award: IAward, game: Game): PlayerInput {
+      
       const funder = (megaCredits: number, heat: number) => {
         game.fundAward(this, award);
         this.megaCredits -= megaCredits;
@@ -1489,6 +1508,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
         );
       }
       return new SelectOption(award.name, () => {
+        this.time -= (performance.now() - this.turnStart)/1000
         return funder(game.getAwardFundingCost(), 0);
       });
     }
@@ -1574,6 +1594,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
     // Propose a new action to undo last action
     private undoTurnOption(game: Game): PlayerInput {
       return new SelectOption("Undo Turn", () => {
+        this.time -= (performance.now() - this.turnStart)/1000
         try {
           Database.getInstance().restoreLastSave(game.id, game.lastSaveId, game);
         }
