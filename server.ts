@@ -331,7 +331,9 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
         boardName: gameReq.board,
         showOtherPlayersVP: gameReq.showOtherPlayersVP,
         customCorporationsList: gameReq.customCorporationsList,
-        solarPhaseOption: gameReq.solarPhaseOption
+        solarPhaseOption: gameReq.solarPhaseOption,
+        timer: gameReq.timer,
+        startingTime: gameReq.startingTime
       } as GameOptions;
 
       const game = new Game(gameId, players, firstPlayer, gameOptions);
@@ -435,7 +437,8 @@ function getPlayer(player: Player, game: Game): string {
     showOtherPlayersVP: game.showOtherPlayersVP,
     actionsThisGeneration: Array.from(player.getActionsThisGeneration()),
     fleetSize: player.fleetSize,
-    tradesThisTurn: player.tradesThisTurn
+    tradesThisTurn: player.tradesThisTurn,
+    time: player.time
   } as PlayerModel;
   return JSON.stringify(output);
 }

@@ -39,6 +39,7 @@ import {SerializedPlayer} from "./SerializedPlayer";
 import {LogMessageType} from "./LogMessageType";
 import {LogMessageData} from "./LogMessageData";
 import {LogMessageDataType} from "./LogMessageDataType";
+import { performance } from "perf_hooks";
 
 export class Player implements ILoadable<SerializedPlayer, Player>{
     public corporationCard: CorporationCard | undefined = undefined;
@@ -81,6 +82,8 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
     public colonyTradeOffset: number = 0;
     public colonyTradeDiscount: number = 0;
     public removingPlayers: Array<string> = [];
+    public time: number =  60*30;
+    private turnStart: number = 0;
 
     constructor(
         public name: string,
@@ -1543,6 +1546,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
 
     private endTurnOption(game: Game): PlayerInput {
       return new SelectOption("End Turn", () => {
+        this.time -= (performance.now() - this.turnStart)/1000
         this.actionsTakenThisRound = 1;
         game.log(
           LogMessageType.DEFAULT,
@@ -1555,6 +1559,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
 
     private passOption(game: Game): PlayerInput {
       return new SelectOption("Pass", () => {
+        this.time -= (performance.now() - this.turnStart)/1000
         game.playerHasPassed(this);
         game.log(
           LogMessageType.DEFAULT,
@@ -1718,6 +1723,7 @@ export class Player implements ILoadable<SerializedPlayer, Player>{
     }
 
     public takeAction(game: Game): void {
+      this.turnStart = performance.now()
 
       //Interrupt action
       const interruptIndex = game.interrupts.findIndex(interrupt => interrupt.player === this);

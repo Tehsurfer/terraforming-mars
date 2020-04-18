@@ -58,6 +58,18 @@ export const PlayerHome = Vue.component("player-home", {
             return fleetsRange
         }
     },
+    computed: {
+        minutes: function() {
+            return Math.floor(this.player.time/60)
+        },
+        seconds: function (){
+            var sec = Math.floor(this.player.time) % 60
+            if ( sec < 10){
+                return "0" + String(sec)
+            }
+            return sec
+        }
+    },
     mounted: function () {
         dialogPolyfill.default.registerDialog(document.getElementById("dialog-default"));
     },
@@ -82,6 +94,10 @@ export const PlayerHome = Vue.component("player-home", {
                     <a :href="'/the-end?id='+ player.id" v-i18n>Go to game results</a>
                 </div>
             </div>
+
+      <div id="clock">{{minutes}}:{{seconds}}</div>
+
+
 
             <preferences v-trim-whitespace></preferences>
 

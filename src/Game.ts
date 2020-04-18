@@ -61,6 +61,8 @@ export interface GameOptions {
   showOtherPlayersVP: boolean;
   customCorporationsList: Array<CardName>;
   solarPhaseOption: boolean;
+  timer: boolean;
+  startingTime: number;
 }  
 
 export class Game implements ILoadable<SerializedGame, Game> {
@@ -118,7 +120,9 @@ export class Game implements ILoadable<SerializedGame, Game> {
           boardName: BoardName.ORIGINAL,
           showOtherPlayersVP: false,
           customCorporationsList: [],
-          solarPhaseOption: false
+          solarPhaseOption: false,
+          timer: false,
+          startingTime: 1800,
         } as GameOptions
       }
 
@@ -140,6 +144,11 @@ export class Game implements ILoadable<SerializedGame, Game> {
         this.soloMode = true;
         this.draftVariant = false;
         this.setupSolo();
+      }
+      if( gameOptions.timer ){
+        for (const player of players) {
+         player.time = gameOptions.startingTime
+        }
       }
 
       let corporationCards = ALL_CORPORATION_CARDS.map((cf) => new cf.factory());

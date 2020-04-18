@@ -22,6 +22,8 @@ interface CreateGameModel {
     board: BoardName | "random";
     seed: number;
     solarPhaseOption: boolean;
+    timer: boolean;
+    startingTime: number;
 }
 
 interface NewPlayerModel {
@@ -38,11 +40,11 @@ export const CreateGameForm = Vue.component("create-game-form", {
             firstIndex: 1,
             playersCount: 1,
             players: [
-                {index: 1, name: "", color: Color.RED, beginner: false, first: false},
-                {index: 2, name: "", color: Color.GREEN, beginner: false, first: false},
-                {index: 3, name: "", color: Color.YELLOW, beginner: false, first: false},
-                {index: 4, name: "", color: Color.BLUE, beginner: false, first: false},
-                {index: 5, name: "", color: Color.BLACK, beginner: false, first: false}
+                {index: 1, name: "", color: Color.RED, beginner: false, first: false,  },
+                {index: 2, name: "", color: Color.GREEN, beginner: false, first: false, },
+                {index: 3, name: "", color: Color.YELLOW, beginner: false, first: false,},
+                {index: 4, name: "", color: Color.BLUE, beginner: false, first: false, },
+                {index: 5, name: "", color: Color.BLACK, beginner: false, first: false, }
             ],
             prelude: false,
             draftVariant: true,
@@ -62,7 +64,9 @@ export const CreateGameForm = Vue.component("create-game-form", {
             ],
             seed: Math.random(),
             seededGame: false,
-            solarPhaseOption: false
+            solarPhaseOption: false,
+            timer: true,
+            startingTime: 1800,
         } as CreateGameModel
     },
     components: {
@@ -117,9 +121,12 @@ export const CreateGameForm = Vue.component("create-game-form", {
             const customCorporationsList = component.customCorporationsList;
             const board =  component.board;
             const seed = component.seed;
+            const timer = this.timer;
+            const startingTime = this.startingTime;
+    
 
             const dataToSend = JSON.stringify({
-                players: players, prelude, draftVariant, showOtherPlayersVP, venusNext, colonies, customCorporationsList, board, seed, solarPhaseOption
+                players: players, prelude, draftVariant, showOtherPlayersVP, venusNext, colonies, customCorporationsList, board, seed, solarPhaseOption, timer, startingTime
             });
 
             const onSucces = (response: any) => {
@@ -226,6 +233,14 @@ export const CreateGameForm = Vue.component("create-game-form", {
                                 <input type="checkbox" v-model="seededGame">
                                 <i class="form-icon"></i> <span v-i18n>Show seed</span>
                             </label>
+                            <label class="form-switch">
+                            <input type="checkbox" v-model="timer">
+                                <i class="form-icon"></i> <span v-i18n>Use chess timer</span>
+                            </label>
+                            <input v-if="timer" class="form-input form-inline create-game-player-name" :placeholder="'Starting time'" v-model="startingTime"/>
+                            <input v-if="timer" class="form-input form-inline create-game-player-name" :placeholder="'Additional time per turn'"  />
+                            
+
                             <div v-if="seededGame">
                                 <input class="form-input form-inline" v-model="seed" />
                             </div>
