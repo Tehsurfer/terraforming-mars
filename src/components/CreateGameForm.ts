@@ -16,12 +16,15 @@ interface CreateGameModel {
     showOtherPlayersVP: boolean;
     venusNext: boolean;
     colonies: boolean;
+    turmoil: boolean;
     customCorporationsList: Array<CardName>;
     showCorporationList: boolean;
     isSoloModePage: boolean,
     board: BoardName | "random";
     seed: number;
     solarPhaseOption: boolean;
+    promoCardsOption: boolean;
+    startingCorporations: number;
 }
 
 interface NewPlayerModel {
@@ -50,6 +53,7 @@ export const CreateGameForm = Vue.component("create-game-form", {
             showOtherPlayersVP: false,
             venusNext: false,
             colonies: false,
+            turmoil: false,
             customCorporationsList: [],
             showCorporationList: false,
             isSoloModePage: false,
@@ -62,7 +66,9 @@ export const CreateGameForm = Vue.component("create-game-form", {
             ],
             seed: Math.random(),
             seededGame: false,
-            solarPhaseOption: false
+            solarPhaseOption: false,
+            promoCardsOption: false,
+            startingCorporations: 2
         } as CreateGameModel
     },
     components: {
@@ -113,13 +119,16 @@ export const CreateGameForm = Vue.component("create-game-form", {
             const showOtherPlayersVP = component.showOtherPlayersVP;
             const venusNext = component.venusNext;
             const colonies = component.colonies;
+            const turmoil = component.turmoil;
             const solarPhaseOption = this.solarPhaseOption;
             const customCorporationsList = component.customCorporationsList;
             const board =  component.board;
             const seed = component.seed;
+            const promoCardsOption = component.promoCardsOption;
+            const startingCorporations = component.startingCorporations;
 
             const dataToSend = JSON.stringify({
-                players: players, prelude, draftVariant, showOtherPlayersVP, venusNext, colonies, customCorporationsList, board, seed, solarPhaseOption
+                players: players, prelude, draftVariant, showOtherPlayersVP, venusNext, colonies, turmoil, customCorporationsList, board, seed, solarPhaseOption, promoCardsOption, startingCorporations 
             });
 
             const onSucces = (response: any) => {
@@ -192,6 +201,12 @@ export const CreateGameForm = Vue.component("create-game-form", {
                                 <input type="checkbox" name="colonies"  v-model="colonies">
                                 <i class="form-icon"></i> <span v-i18n>Colonies</span>
                             </label>
+
+                            <label class="form-switch">
+                                <input type="checkbox" name="turmoil"  v-model="turmoil">
+                                <i class="form-icon"></i> <span v-i18n>Turmoil</span>
+                            </label>                            
+
                         </div>
 
                         <div class="create-game-options-block col3 col-sm-6">
@@ -220,6 +235,16 @@ export const CreateGameForm = Vue.component("create-game-form", {
                             <label class="form-switch">
                                 <input type="checkbox" v-model="solarPhaseOption">
                                 <i class="form-icon"></i> <span v-i18n>Use Solar Phase Option</span>
+                            </label>
+
+                            <label class="form-switch">
+                                <input type="checkbox" v-model="promoCardsOption">
+                                <i class="form-icon"></i> <span v-i18n>Use promo cards</span>
+                            </label>
+
+                            <label class="form-label">
+                                <input type="number" class="form-input form-inline create-game-corporations-count" value="2" min="1" :max="6" v-model="startingCorporations" />
+                                <i class="form-icon"></i> <span v-i18n>Starting Corporations</span>
                             </label>
 
                             <label class="form-switch">
